@@ -19,7 +19,7 @@ signarR, .net core, blazor, javascript, html
 __Installing__
 
 - install vs code (if necessary)
-- add signalr Nuget
+- add signalr package via Nuget (Microsoft.AspNetCore.SignalR.Client)
 
 # __Authors__
 
