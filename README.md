@@ -4,10 +4,11 @@ Live chat application for online communication
 
 **Description**
 
-The application provides live online communication through web. Currently, it supports message chatting styles below,
+The application provides live online communication through web. It supports message chatting styles below,
 
 - between users
 - message to group
+- all users in hub connection
 
 # __Getting Started__
 
@@ -17,8 +18,8 @@ signarR, .net core, blazor, javascript, html
   
 __Installing__
 
-- install node.js
-- socket.io client for VS code
+- install vs code (if necessary)
+- add signalr Nuget
 
 # __Authors__
 
@@ -34,5 +35,5 @@ version 1.0.0.1
 
 # __Acknowledgments__
 
-Socket.io
+signarR
 
