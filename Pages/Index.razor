@@ -1,0 +1,148 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager Navigation
+@implements IAsyncDisposable
+
+<PageTitle>Live chat</PageTitle>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3><b>Chat details</b></h3>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        Targets
+                    </div>
+                    <div class="col-md-8">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="content" class="mb-2" style="height: 300px; overflow-y: scroll; padding: 10px; border: solid 1px #ccc; word-wrap: break-word;">
+                            <ul id="messagelist">
+                                @foreach (var msg in messages)
+                                {
+                                    <li>@msg</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="group" class="col-sm-2 col-form-label">
+                        group
+                    </label>
+                    <div class="col-sm-10">
+                        <input id="group" class="form-control" @bind="groupctl" type="text" placeholder="Enter a group" />
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <label for="user" class="col-sm-2">user</label>
+                    <div class="col-sm-10">
+                        <input id="user" class="form-control" type="text" @bind="userctl" placeholder="Enter your name" />
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <label for="istyping" class="col-sm-2"></label>
+                    <div class="col-sm-10">
+                        <label id="istyping" style="width: 100%; heigit: 24px; color: #ccc"></label>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <label for="field" class="col-sm-2">Message</label>
+                    <div class="col-sm-10">
+                        <input id="field" class="form-control" @bind="messagectl" type="text" placeholder="enter a message" />
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10">
+                        <button id="send" @onclick="Send" disabled="@(!IsConnected)" class="btn btn-primary mr-1">Send</button>
+                        <button id="sendgroup" @onclick="SendGroup" class="btn btn-primary mr-1">Send group</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+<div class="">
+    <label>
+        User: 
+        <input @bind="userctl"/>
+    </label>
+</div>
+<div class="form-group>">
+    <label>
+        Message:
+        <input @bind="messagectl"/>
+    </label>
+</div>
+<button @onclick="Send" disabled="@(!IsConnected)">Send</button>
+
+<hr/>
+
+<ul id="messagelist">
+    @foreach (var msg in messages)
+    {
+        <li>@msg</li>
+    }
+</ul>
+-->
+
+@code{
+    private string groupctl = string.Empty;
+    private string userctl = string.Empty;
+    private string messagectl = string.Empty;
+    private List<string> messages = new List<string>();
+    private HubConnection? hubConnection;
+
+    protected override async Task OnInitializedAsync() {
+        hubConnection = new HubConnectionBuilder()
+                            .WithUrl(Navigation.ToAbsoluteUri("/ChatHub")).Build();
+        
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) => {
+            var chatmsg = $"{user}: {message}";
+            messages.Add(chatmsg);
+            InvokeAsync(StateHasChanged);
+            });
+
+        hubConnection.On<string>("Send", (message) => {
+            messages.Add(message);
+            InvokeAsync(StateHasChanged);
+            });
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task Send(){
+        if (hubConnection is not null){
+            await hubConnection.SendAsync("SendMessage", userctl, messagectl);
+        }
+    }
+
+    private async Task SendGroup(){
+        if (hubConnection is not null){
+            await hubConnection.SendAsync("SendToGroup", groupctl, messagectl);
+        }
+    }
+
+    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync(){
+        if (hubConnection is not null){
+            await hubConnection.DisposeAsync();
+        }
+    }
+}
