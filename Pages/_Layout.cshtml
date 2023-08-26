@@ -28,5 +28,12 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+    <script>
+        function scrollToView() {
+            var contentctl = document.getElementById("content");
+            contentctl.focus();
+            contentctl.scrollTop = contentctl.scrollHeight;
+        };
+    </script>
 </body>
 </html>

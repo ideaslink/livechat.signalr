@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using livechat.signalr.hubs;
 using Microsoft.AspNetCore.ResponseCompression;
+using livechat.signalr.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddDbContext<DataContext>();
 builder.Services.AddResponseCompression(opts => {
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream"}
@@ -16,6 +18,12 @@ builder.Services.AddResponseCompression(opts => {
 });
 
 var app = builder.Build();
+
+// set up db (sqlite)
+using (var scope = app.Services.CreateScope()){
+    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+}
 
 app.UseResponseCompression();
 
