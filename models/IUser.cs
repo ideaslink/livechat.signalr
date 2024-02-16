@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace livechat.signalr.models
 {
     public interface IUser

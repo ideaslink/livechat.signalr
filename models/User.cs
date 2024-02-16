@@ -15,8 +15,5 @@ namespace livechat.signalr.models
         public string? DisplayName { get; set; }
 
         public ICollection<Group_User>? Group_Users {get; set;}
-
-        // public string? GroupName {get; set;}
-        // public Group? Group {get; set;}
     }
 }

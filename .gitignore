@@ -1,0 +1,26 @@
+# visual studio ...
+.vs/
+*.suo
+*.user
+*.dotsettings
+*.csproj.user
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+[Bb]in/
+[Oo]bj/
+
+# .net core
+project.lock.json
+**/bin/
+**/obj/
+*.nupkg
+*.vscode/
+
+# other
+[Nn]otes

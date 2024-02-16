@@ -66,15 +66,15 @@ namespace livechat.signalr.hubs
         private void SaveGroupUser(string group = "", string user = "", string icon = "", string color = ""){
             // save user to db (if necessary)
             if (user.Length != 0 && _datacontext.Users?.FirstOrDefault(s => s.UserName == user) == null){
-                _datacontext.Users?.Add(new models.User() { UserName = user, Icon = icon }); 
+                _datacontext.Add(new models.User() { UserName = user, Icon = icon }); 
             }
 
             if (group.Length != 0 && _datacontext.Groups?.FirstOrDefault(s => s.GroupName == group) == null){
-                _datacontext.Groups?.Add(new models.Group() { GroupName = group, Color = color }); 
+                _datacontext.Add(new models.Group() { GroupName = group, Color = color }); 
             }
 
             if (user.Length != 0 && group.Length != 0 && _datacontext.Group_Users?.FirstOrDefault(gu => gu.UserName == user && gu.GroupName == group) == null){
-                _datacontext.Group_Users?.Add(new Group_User { UserName = user, GroupName = group});
+                _datacontext.Add(new Group_User { UserName = user, GroupName = group});
             }
 
             _datacontext.SaveChanges();
